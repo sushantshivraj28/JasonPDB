@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html lang="en">
+    <head>
+        <title>Bootstrap Example</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet"
+              href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script
+        src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src=" http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js "></script>
+        <script
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <style> .container{background-color: lightblue;
+                   border: 4px solid yellow;
+                   border-radius: 10px 10px;
+            }
+            .btnvalue{
+                text-align: center;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="container">
+
+            <h2>Student Information Form</h2>
+            <form id="empForm" method="post">
+                <div class="form-group">
+                    <span><label for="emp">Roll No:</label> <label id="empIdMsg">
+                        </label></span>
+                    <input type="text" class="form-control" name="Roll No" id="Roll_No"
+                           placeholder="Enter Roll no " required>
+                </div>
+                <div class="form-group">
+                    <label for="empName">Student Name:</label>
+                    <input type="text" class="form-control" id="Student_Name"
+                           placeholder="Enter Student Name" name="empName">
+                </div>
+                <div class="form-group">
+                    <label for="empEmail">Branch:</label>
+                    <input type="email" class="form-control" id="Branch"
+                           placeholder="Enter Branch" name="empEmail">
+                </div>
+                <input type="button" class="btnvalue" id="empSave" value="Save"
+                       onclick="saveEmployee();">
+            </form>
+        </div>
+        <script>
+            function validateAndGetFormData() {
+                var empIdVar = $("#Roll_No").val();
+                if (empIdVar === "") {
+                    alert("Roll No is Required Value");
+                    $("#Roll_No").focus();
+                    return "";
+                }
+                var empNameVar = $("#Student_Name").val();
+                if (empNameVar === "") {
+                    alert("Student Name is Required Value");
+                    $("#Student_Name").focus();
+                    return "";
+                }
+                var empEmailVar = $("#Branch").val();
+                if (empEmailVar === "") {
+                    alert(" branch is Required Value");
+                    $("#empEmail").focus();
+                    return "";
+                }
+                var jsonStrObj = {
+                    Roll_No: empIdVar,
+                    Student_Name: empNameVar,
+                    Branch: empEmailVar,
+                };
+                return JSON.stringify(jsonStrObj);
+            }
+            
+            
+            
+            function resetForm() {
+                $("#Roll_No").val("")
+                $("#Student_Name").val("");
+                $("#Branch").val("");
+                $("#empId").focus();
+            }
+
+            function saveEmployee() {
+                var jsonStr = validateAndGetFormData();
+                if (jsonStr === "") {
+                    return;
+                }
+                var putReqStr = createPUTRequest("90937117|-31948801159392753|90931201",
+                        jsonStr, "Student_Info", "Student-rel");
+                alert(putReqStr);
+                jQuery.ajaxSetup({async: false});
+                var resultObj = executeCommandAtGivenBaseUrl(putReqStr,
+                        "http://api.login2explore.com:5577", "/api/iml");
+                alert(JSON.stringify(resultObj));
+                jQuery.ajaxSetup({async: true});
+                resetForm();
+            }
+            
+        </script>
+
+    </body>     
